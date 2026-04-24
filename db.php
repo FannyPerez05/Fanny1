@@ -4,9 +4,9 @@
 
 function conectarDB() {
     $host = "localhost";
-    $db   = "fperez";
+    $db   = "fperez_db";
     $user = "fperez";
-    $pass = "426182";
+    $pass = "12345678";
     $charset = "utf8mb4";
 
     // El DSN (Data Source Name) define el tipo de driver y los datos del servidor
