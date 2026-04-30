@@ -1,53 +1,162 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./wwwroot/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
-    <script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
-    <script src="./wwwroot/js/script.js"></script>
-  </head>
-  <body>
-    <main id="main">
-      <div class="container-lg d-flex flex-column">
-        <div class="row align-items-center justify-content-center no-gutters">
-          <div class="col-md-7 col-lg-5">
-            <div class="shadow mt-5 p-5 bg-white rounded-3 border">
-            <div class="w-100 text-center">
-              <h1 class="display-6"> Inciar sesión</h1>
-              <p class="text-muted">Use sus credenciales para iniciar sesión</p>
-            </div>
-            <div class="col-12">
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema Login | Mujer Tech</title>
 
-              <div class="mb-3">
-                <label for="email"class="form-label">Email</label>
-                <input class="form-control" id="email">
-              </div>
-              <div class="mb-3">
-                <label for="pwd"class="form-label">Contraseña</label>
-                <input class="form-control" type="password" id="pwd">
-              </div>
-              <div class="d-flex justify-content-between py-3">
-                <div>
-                  <span class="small text-muted">¿No tienes cuenta?</span>
-                  <a class="small" href="registro.html"> Crear cuenta</a>
-                </div>
-                <button class="btn btn-outline-primary" onclick="login();"> Iniciar sesión</button>
+  <!-- Bootstrap -->
+  <link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
 
-              </div>
-            </div>  
-            </div>
+  <style>
+    body{
+      margin:0;
+      padding:0;
+      min-height:100vh;
+      background: linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
+      background-size: 300% 300%;
+      animation: fondo 8s ease infinite;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-            
-          </div>
+    @keyframes fondo{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
 
+    .login-box{
+      background: rgba(255,255,255,.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
+
+    .avatar{
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      background: linear-gradient(135deg,#0d6efd,#d63384);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:40px;
+      margin:auto;
+      margin-top:-80px;
+      box-shadow:0 10px 20px rgba(0,0,0,.2);
+    }
+
+    .form-control{
+      border-radius:12px;
+      padding:12px;
+    }
+
+    .btn-login{
+      border-radius:12px;
+      padding:12px;
+      font-weight:bold;
+      background: linear-gradient(135deg,#0d6efd,#6610f2);
+      border:none;
+      color:white;
+      transition:.3s;
+    }
+
+    .btn-login:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 20px rgba(13,110,253,.3);
+    }
+
+    .brand{
+      font-weight:bold;
+      color:#6610f2;
+    }
+
+    .small-link{
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    .small-link:hover{
+      color:#d63384;
+    }
+
+    .footer-text{
+      font-size:14px;
+      color:#777;
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="container min-vh-100 d-flex justify-content-center align-items-center">
+
+  <div class="col-md-7 col-lg-5">
+
+    <div class="login-box position-relative">
+
+      <div class="avatar">
+        <i class="bi bi-code-slash"></i>
+      </div>
+
+      <div class="text-center mt-3 mb-4">
+        <h1 class="fw-bold">Bienvenid@</h1>
+        <p class="text-muted">Panel de acceso ala biblioteca💻✨</p>
+        <span class="brand">BIBLIOTECA</span>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold">
+          <i class="bi bi-envelope-fill text-primary"></i> Correo electrónico
+        </label>
+        <input type="email" class="form-control" id="email" placeholder="ejemplo@correo.com">
+      </div>
+
+      <div class="mb-3">
+        <label for="pwd" class="form-label fw-semibold">
+          <i class="bi bi-lock-fill text-danger"></i> Contraseña
+        </label>
+        <input type="password" class="form-control" id="pwd" placeholder="********">
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember">
+          <label class="form-check-label small" for="remember">
+            Recordarme
+          </label>
         </div>
 
+        <a href="#" class="small-link">¿Olvidaste tu contraseña?</a>
       </div>
-    </main>
-  </body>
-</html>
 
+      <div class="d-grid mb-3">
+        <button class="btn btn-login" onclick="login();">
+          <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+        </button>
+      </div>
+
+      <div class="text-center">
+        <span class="text-muted">¿No tienes cuenta?</span>
+        <a href="registro.html" class="small-link"> Crear cuenta</a>
+      </div>
+
+      <hr>
+
+      <div class="text-center footer-text">
+        Diseñado para mujeres en tecnología 🚀
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
+<script src="./wwwroot/js/script.js"></script>
+
+</body>
+</html>

@@ -1,56 +1,172 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./wwwroot/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
-    <script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
-    <script src="./wwwroot/js/script.js"></script>
-  </head>
-  <body>
-    <main id="main">
-      <div class="container-lg d-flex flex-column">
-        <div class="row align-items-center justify-content-center no-gutters">
-          <div class="col-md-7 col-lg-5">
-            <div class="shadow mt-5 p-5 bg-white rounded-3 border">
-            <div class="w-100 text-center">
-              <h1 class="display-6"> Registrate</h1>
-            </div>
-            <div class="col-12">
-              <div class="mb-3">
-                <label for="nombre"class="form-label">Nombre completo</label>
-                <input class="form-control" id="nombre">
-              </div>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteca | Registro</title>
 
-              <div class="mb-3">
-                <label for="email"class="form-label">Email</label>
-                <input class="form-control" id="email">
-              </div>
-              <div class="mb-3">
-                <label for="pwd"class="form-label">Contraseña</label>
-                <input class="form-control" type="password" id="pwd">
-              </div>
-              <div class="d-flex justify-content-between py-3">
-                <div>
-                  <span class="small text-muted">¿Ya tienes cuenta?</span>
-                  <a class="small" href="index.html"> Iniciar sesión</a>
-                </div>
-                <button class="btn btn-outline-primary" onclick="registroUsuarios();"> Registrarse</button>
+<link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
 
-              </div>
-            </div>  
-            </div>
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
+    background-size:300% 300%;
+    animation:fondo 8s ease infinite;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
-            
-          </div>
+@keyframes fondo{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
 
-        </div>
+.registro-box{
+    width:100%;
+    max-width:500px;
+    background:rgba(255,255,255,.96);
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 20px 40px rgba(0,0,0,.20);
+    position:relative;
+}
 
-      </div>
-    </main>
-  </body>
+.logo{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#0d6efd,#d63384);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:38px;
+    margin:auto;
+    margin-top:-80px;
+    box-shadow:0 10px 25px rgba(0,0,0,.20);
+}
+
+h1{
+    font-weight:700;
+    color:#6610f2;
+}
+
+.sub{
+    color:#777;
+}
+
+.form-control{
+    border-radius:12px;
+    padding:12px;
+}
+
+.form-control:focus{
+    border-color:#6610f2;
+    box-shadow:0 0 0 .2rem rgba(102,16,242,.15);
+}
+
+.btn-registro{
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-registro:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(13,110,253,.25);
+}
+
+.link{
+    text-decoration:none;
+    color:#6610f2;
+    font-weight:600;
+}
+
+.link:hover{
+    color:#d63384;
+}
+
+.footer{
+    font-size:14px;
+    color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-md-7 col-lg-5">
+
+<div class="registro-box">
+
+<div class="logo">
+<i class="bi bi-person-plus-fill"></i>
+</div>
+
+<div class="text-center mt-3 mb-4">
+<h1>Regístrate</h1>
+<p class="sub">Crea tu cuenta en el sistema bibliotecario</p>
+</div>
+
+<div class="mb-3">
+<label class="form-label fw-semibold">
+<i class="bi bi-person-fill"></i> Nombre completo
+</label>
+<input class="form-control" id="nombre" placeholder="Ingresa tu nombre">
+</div>
+
+<div class="mb-3">
+<label class="form-label fw-semibold">
+<i class="bi bi-envelope-fill"></i> Correo electrónico
+</label>
+<input class="form-control" id="email" placeholder="usuario@correo.com">
+</div>
+
+<div class="mb-3">
+<label class="form-label fw-semibold">
+<i class="bi bi-lock-fill"></i> Contraseña
+</label>
+<input class="form-control" type="password" id="pwd" placeholder="********">
+</div>
+
+<div class="d-grid mb-3">
+<button class="btn btn-registro" onclick="registroUsuarios();">
+<i class="bi bi-person-check-fill"></i>
+Registrarse
+</button>
+</div>
+
+<div class="text-center">
+<span class="text-muted">¿Ya tienes cuenta?</span>
+<a class="link" href="index.html"> Iniciar sesión</a>
+</div>
+
+<hr>
+
+<div class="text-center footer">
+Biblioteca Digital 📚
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
+<script src="./wwwroot/js/script.js"></script>
+
+</body>
 </html>
-
