@@ -96,6 +96,3 @@ if (!isset($_SESSION['id'])) {
     <script src="./js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-
-
-
