@@ -1,98 +1,379 @@
 <?php
 session_start();
 
-// ¿Existe la sesión? Si no, fuera de aquí.
 if (!isset($_SESSION['id'])) {
     header("Location: index.html");
     exit();
 }
+
+include("db.php");
+$con = conectarDB();
+
+/* =========================
+   GUARDAR LIBRO
+========================= */
+if (isset($_POST['guardar_libro'])) {
+
+    $titulo = $_POST['titulo'];
+    $autor_id = $_POST['autor_id'];
+
+    $sql = "INSERT INTO libros (titulo, autor_id)
+            VALUES (:titulo, :autor_id)";
+
+    $stmt = $con->prepare($sql);
+
+    $stmt->execute([
+        ':titulo' => $titulo,
+        ':autor_id' => $autor_id
+    ]);
+}
+
+/* =========================
+   ELIMINAR LIBRO
+========================= */
+if (isset($_GET['eliminar'])) {
+
+    $id = $_GET['eliminar'];
+
+    $sql = "DELETE FROM libros WHERE id=:id";
+
+    $stmt = $con->prepare($sql);
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+}
+
+/* =========================
+   REGISTRAR PRÉSTAMO
+========================= */
+if (isset($_POST['guardar_prestamo'])) {
+
+    $usuario_id = $_SESSION['id'];
+    $libro_id = $_POST['libro_id'];
+
+    $sql = "INSERT INTO prestamos(usuario_id, libro_id, fecha_prestamo)
+            VALUES(:usuario, :libro, NOW())";
+
+    $stmt = $con->prepare($sql);
+
+    $stmt->execute([
+        ':usuario' => $usuario_id,
+        ':libro' => $libro_id
+    ]);
+}
 ?>
+
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
-    <script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
-    <script src="./wwwroot/js/script.js"></script>
-  </head>
-  <body>
-    <header>
-      <div class="px-3 py-2 text-bg-primary border-bottom">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none"> 
-              <i class="bi bi-bootstrap fw-bold fs-5 pe-2"></i>
-            </a>
-            <nav >
-            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-              <li><a class="nav-link text-white" href="#"> <i class="bi bi-house fw-bold fs-5 pe-2"></i>Home</a></li>
-              <li><a class="nav-link text-white" href="logout.php"> 
-                  <i class="bi bi-box-arrow-in-left fw-bold fs-5 pe-2"></i>Salir
-                </a></li>
+<html lang="es">
+<head>
 
-            </ul>
-            </nav>
-          </div>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        </div>
-      </div>
-    </header>
-    <div class="container-fluid">
+<title>Biblioteca Digital</title>
 
-      <div class="row">
+<link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
 
-        <aside class="col-8 col-sm-6 col-md-3 col-lg-3 col-xl-2 d-none d-lg-block show"
-        style="position: fixed; top: 0;bottom: 0;left: 0;border-right: 1px solid var(--bs-border-color-translucent); margin-top:70px; padding: 15px 0 0;z-index: 999; overflow-y: auto;">
-        <div class="px-3">
-          <nav>
-          <ul class="nav nav-pills flex-column mb-auto">            
-            <li class="nav-item">
-              <a class="nav-link active" href="#" onclick="document.getElementById('lightbulb').src='./wwwroot/img/bulboff.gif'">
-              <i class="bi bi-lightbulb fw-bold fs-5 pe-2"></i>
-              Apagado</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link"  href="#" onclick="document.getElementById('lightbulb').src='./wwwroot/img/bulbon.gif'">
-              <i class="bi bi-lightbulb-fill fw-bold fs-5 pe-2"></i>
-              Encendido</a>
-            </li>
-          </ul>
-        </nav>
-        </div>
-        
-      </aside>
+<style>
 
-      <main class="col-lg-9 col-xl-10 offset-lg-3 offset-xl-2">
+body{
+    background:linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
+    background-size:300% 300%;
+    animation:fondo 8s ease infinite;
+    min-height:100vh;
+    font-family:'Segoe UI',sans-serif;
+}
 
-        <div class="row">
-          <div class="col-12 offset-sm-0 offset-lg-1 col-lg-10 offset-xl-2 col-xl-8 mt-5">
-            <article id="article">
-            <figure>
-              <img id="lightbulb" class="img-fluid" src="./wwwroot/img/bulboff.gif">
-            </figure>
-          </article>
+@keyframes fondo{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
 
-          </div>
+.card-box{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 20px 40px rgba(0,0,0,.2);
+}
 
-        </div>
-          
-      </main>
+.form-control{
+    border-radius:12px;
+}
 
-      </div>
-      
-      <div class="row">
-        
-      </div>
-      
-    </div>
-    
-    
-    
+.btn-custom{
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
+    color:white;
+    border:none;
+    border-radius:12px;
+}
 
+.btn-custom:hover{
+    color:white;
+    transform:translateY(-2px);
+}
 
-    <script src="./js/bootstrap.bundle.min.js"></script>
-  </body>
+.navbar-custom{
+    background:rgba(0,0,0,.2);
+    backdrop-filter:blur(10px);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-custom px-4">
+
+<h4 class="text-white">
+<i class="bi bi-book-fill"></i>
+Biblioteca Digital
+</h4>
+
+<a href="logout.php" class="btn btn-light">
+Salir
+</a>
+
+</nav>
+
+<div class="container py-5">
+
+<!-- AGREGAR LIBRO -->
+<div class="row justify-content-center mb-5">
+
+<div class="col-md-6">
+
+<div class="card-box">
+
+<h3 class="mb-3 text-center">
+Agregar Libro
+</h3>
+
+<form method="POST">
+
+<input
+type="text"
+name="titulo"
+class="form-control mb-3"
+placeholder="Nombre del libro"
+required>
+
+<select
+name="autor_id"
+class="form-control mb-3"
+required>
+
+<option value="">
+Selecciona autor
+</option>
+
+<?php
+
+$autores = $con->query("SELECT * FROM autores");
+
+foreach($autores as $a){
+
+echo "<option value='".$a['id']."'>".$a['nombre']."</option>";
+
+}
+
+?>
+
+</select>
+
+<button
+name="guardar_libro"
+class="btn btn-custom w-100">
+
+Guardar Libro
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TABLA LIBROS -->
+<div class="card-box mb-5">
+
+<h3 class="mb-3">
+Libros Registrados
+</h3>
+
+<table class="table table-striped">
+
+<thead class="table-primary">
+
+<tr>
+<th>ID</th>
+<th>Título</th>
+<th>Autor</th>
+<th>Acción</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<?php
+
+$libros = $con->query("
+SELECT libros.*, autores.nombre AS autor
+FROM libros
+LEFT JOIN autores
+ON libros.autor_id = autores.id
+");
+
+foreach($libros as $l){
+
+?>
+
+<tr>
+
+<td><?php echo $l['id']; ?></td>
+
+<td><?php echo $l['titulo']; ?></td>
+
+<td><?php echo $l['autor']; ?></td>
+
+<td>
+
+<a
+href="?eliminar=<?php echo $l['id']; ?>"
+class="btn btn-danger btn-sm">
+
+Eliminar
+
+</a>
+
+</td>
+
+</tr>
+
+<?php } ?>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- PRÉSTAMOS -->
+<div class="row justify-content-center mb-5">
+
+<div class="col-md-6">
+
+<div class="card-box">
+
+<h3 class="mb-3 text-center">
+Registrar Préstamo
+</h3>
+
+<form method="POST">
+
+<select
+name="libro_id"
+class="form-control mb-3"
+required>
+
+<option value="">
+Selecciona libro
+</option>
+
+<?php
+
+$libros = $con->query("SELECT * FROM libros");
+
+foreach($libros as $libro){
+
+echo "<option value='".$libro['id']."'>".$libro['titulo']."</option>";
+
+}
+
+?>
+
+</select>
+
+<button
+name="guardar_prestamo"
+class="btn btn-success w-100">
+
+Prestar Libro
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TABLA PRÉSTAMOS -->
+<div class="card-box">
+
+<h3 class="mb-3">
+Préstamos
+</h3>
+
+<table class="table table-striped">
+
+<thead class="table-success">
+
+<tr>
+<th>ID</th>
+<th>Libro</th>
+<th>Usuario</th>
+<th>Fecha</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<?php
+
+$prestamos = $con->query("
+SELECT prestamos.*, libros.titulo, usuarios.nombre
+FROM prestamos
+JOIN libros ON prestamos.libro_id = libros.id
+JOIN usuarios ON prestamos.usuario_id = usuarios.id
+");
+
+foreach($prestamos as $p){
+
+?>
+
+<tr>
+
+<td><?php echo $p['id']; ?></td>
+
+<td><?php echo $p['titulo']; ?></td>
+
+<td><?php echo $p['nombre']; ?></td>
+
+<td><?php echo $p['fecha_prestamo']; ?></td>
+
+</tr>
+
+<?php } ?>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
 </html>
