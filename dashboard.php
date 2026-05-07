@@ -241,11 +241,20 @@ Biblioteca Digital
 Hola
 <?php
 session_start();
+
+$nombre = $_SESSION['nombre'] ?? "Invitado";
+
+// detectar primera vez REAL del usuario (por sesión)
+if (!isset($_SESSION['primer_ingreso'])) {
+    $_SESSION['primer_ingreso'] = true;
+    $titulo = "Bienvenido";
+} else {
+    $titulo = "Bienvenido otra vez";
+}
 ?>
 
 <span class="text-white fw-bold">
-👋 <?php echo $_SESSION['titulo'] ?? 'Bienvenido'; ?>, 
-<?php echo $_SESSION['nombre'] ?? 'Invitado'; ?>
+👋 <?php echo $titulo; ?>, <?php echo htmlspecialchars($nombre); ?>
 </span>
 <a href="logout.php" class="btn btn-light">
 Salir

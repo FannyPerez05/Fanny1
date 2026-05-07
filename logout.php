@@ -1,23 +1,14 @@
 <?php
 session_start();
 
-// borrar variables de sesión
 $_SESSION = [];
-
-// destruir sesión
+session_unset();
 session_destroy();
 
-// borrar cookie de sesión del navegador (importante)
+// borrar cookie de sesión REAL del navegador
 if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
+    setcookie(session_name(), '', time() - 42000, '/');
 }
-
-// (opcional) borrar cookie de usuario si la usas
-setcookie("usuario", "", time() - 3600, "/");
 
 header("Location: index.html");
 exit();
