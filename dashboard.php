@@ -1,27 +1,26 @@
 <?php
 session_start();
 
-include("db.php");
-
-$con = conectarDB();
-
-/* =========================
-   VALIDAR SESIÓN
-========================= */
 if (!isset($_SESSION['id'])) {
     header("Location: index.html");
     exit();
 }
 
+include("db.php");
+
+$con = conectarDB();
+
 /* =========================
    NOMBRE USUARIO
 ========================= */
+
 $nombreCompleto = $_SESSION['nombre'];
 $primerNombre = explode(" ", $nombreCompleto)[0];
 
 /* =========================
    GUARDAR AUTOR
 ========================= */
+
 if(isset($_POST['guardar_autor'])){
 
     $nombre_autor = $_POST['nombre_autor'];
@@ -39,13 +38,14 @@ if(isset($_POST['guardar_autor'])){
 /* =========================
    GUARDAR LIBRO
 ========================= */
-if (isset($_POST['guardar_libro'])) {
+
+if(isset($_POST['guardar_libro'])){
 
     $titulo = $_POST['titulo'];
     $autor_id = $_POST['autor_id'];
 
-    $sql = "INSERT INTO libros (titulo, autor_id)
-            VALUES (:titulo, :autor_id)";
+    $sql = "INSERT INTO libros(titulo, autor_id, disponible)
+            VALUES(:titulo, :autor_id, 1)";
 
     $stmt = $con->prepare($sql);
 
@@ -58,11 +58,13 @@ if (isset($_POST['guardar_libro'])) {
 /* =========================
    ELIMINAR LIBRO
 ========================= */
-if (isset($_GET['eliminar'])) {
+
+if(isset($_GET['eliminar'])){
 
     $id = $_GET['eliminar'];
 
-    $sql = "DELETE FROM libros WHERE id=:id";
+    $sql = "DELETE FROM libros
+            WHERE id = :id";
 
     $stmt = $con->prepare($sql);
 
@@ -72,13 +74,15 @@ if (isset($_GET['eliminar'])) {
 }
 
 /* =========================
-   REGISTRAR PRÉSTAMO
+   REGISTRAR PRESTAMO
 ========================= */
-if (isset($_POST['guardar_prestamo'])) {
+
+if(isset($_POST['guardar_prestamo'])){
 
     $usuario_id = $_SESSION['id'];
     $libro_id = $_POST['libro_id'];
 
+    // Guardar préstamo
     $sql = "INSERT INTO prestamos(usuario_id, libro_id, fecha_prestamo)
             VALUES(:usuario, :libro, NOW())";
 
@@ -87,6 +91,17 @@ if (isset($_POST['guardar_prestamo'])) {
     $stmt->execute([
         ':usuario' => $usuario_id,
         ':libro' => $libro_id
+    ]);
+
+    // Cambiar disponibilidad
+    $sql2 = "UPDATE libros
+             SET disponible = 0
+             WHERE id = :id";
+
+    $stmt2 = $con->prepare($sql2);
+
+    $stmt2->execute([
+        ':id' => $libro_id
     ]);
 }
 ?>
@@ -108,9 +123,9 @@ if (isset($_POST['guardar_prestamo'])) {
 
 body{
     background: linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
-    background-size: 300% 300%;
-    animation: fondo 8s ease infinite;
-    min-height: 100vh;
+    background-size:300% 300%;
+    animation:fondo 8s ease infinite;
+    min-height:100vh;
     font-family:'Segoe UI',sans-serif;
 }
 
@@ -120,26 +135,9 @@ body{
     100%{background-position:0% 50%;}
 }
 
-.card-box{
-    background:white;
-    border-radius:20px;
-    padding:25px;
-    box-shadow:0 20px 40px rgba(0,0,0,.2);
-}
-
-.form-control{
-    border-radius:12px;
-}
-
-.btn-custom{
-    background:linear-gradient(135deg,#0d6efd,#6610f2);
-    color:white;
-    border:none;
-    border-radius:12px;
-}
-
-.btn-custom:hover{
-    color:white;
+.navbar-custom{
+    background:rgba(0,0,0,.2);
+    backdrop-filter:blur(10px);
 }
 
 .sidebar{
@@ -149,13 +147,22 @@ body{
     padding:20px;
 }
 
-.sidebar .btn{
+.card-box{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 20px 40px rgba(0,0,0,.2);
+}
+
+.btn-custom{
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
+    color:white;
+    border:none;
     border-radius:12px;
 }
 
-.navbar-custom{
-    background:rgba(0,0,0,.2);
-    backdrop-filter:blur(10px);
+.form-control{
+    border-radius:12px;
 }
 
 .table{
@@ -170,6 +177,7 @@ body{
 <body>
 
 <!-- NAVBAR -->
+
 <nav class="navbar navbar-custom px-4 py-3">
 
 <h3 class="text-white m-0">
@@ -184,7 +192,6 @@ Hola <?php echo $primerNombre; ?> 👋
 </span>
 
 <a href="logout.php" class="btn btn-light">
-<i class="bi bi-box-arrow-right"></i>
 Salir
 </a>
 
@@ -197,12 +204,13 @@ Salir
 <div class="row">
 
 <!-- SIDEBAR -->
+
 <div class="col-md-3 mb-4">
 
 <div class="sidebar text-center">
 
 <h4 class="text-white mb-4">
-Panel
+Panel Biblioteca
 </h4>
 
 <div class="d-grid gap-3">
@@ -232,7 +240,7 @@ onclick="mostrarSeccion('prestamos')">
 
 <hr class="text-white">
 
-<p class="text-white small">
+<p class="text-white">
 Bienvenid@ a tu biblioteca digital
 </p>
 
@@ -241,9 +249,11 @@ Bienvenid@ a tu biblioteca digital
 </div>
 
 <!-- CONTENIDO -->
+
 <div class="col-md-9">
 
 <!-- AUTORES -->
+
 <div id="autores" class="card-box mb-4">
 
 <h4 class="mb-3">
@@ -272,6 +282,7 @@ Guardar Autor
 </div>
 
 <!-- LIBROS -->
+
 <div id="libros" class="card-box mb-4">
 
 <h4 class="mb-3">
@@ -334,6 +345,7 @@ Libros Registrados
 <th>ID</th>
 <th>Título</th>
 <th>Autor</th>
+<th>Estado</th>
 <th>Acción</th>
 </tr>
 
@@ -364,6 +376,24 @@ foreach($libros as $l){
 
 <td>
 
+<?php if($l['disponible'] == 1){ ?>
+
+<span class="badge bg-success">
+Disponible
+</span>
+
+<?php } else { ?>
+
+<span class="badge bg-danger">
+Prestado
+</span>
+
+<?php } ?>
+
+</td>
+
+<td>
+
 <a
 href="?eliminar=<?php echo $l['id']; ?>"
 class="btn btn-danger btn-sm">
@@ -385,6 +415,7 @@ Eliminar
 </div>
 
 <!-- PRESTAMOS -->
+
 <div id="prestamos" class="card-box">
 
 <h4 class="mb-3">
@@ -406,7 +437,10 @@ Selecciona libro
 
 <?php
 
-$libros = $con->query("SELECT * FROM libros");
+$libros = $con->query("
+SELECT * FROM libros
+WHERE disponible = 1
+");
 
 foreach($libros as $libro){
 
