@@ -245,14 +245,10 @@ session_start();
 
 $nombre = $_SESSION['nombre'] ?? "Invitado";
 
-// inicializar estado de visita
-if (!isset($_SESSION['estado_visita'])) {
-    $_SESSION['estado_visita'] = "primera";
-}
-
-if ($_SESSION['estado_visita'] === "primera") {
+// detectar primera vez REAL del usuario (por sesión)
+if (!isset($_SESSION['primer_ingreso'])) {
+    $_SESSION['primer_ingreso'] = true;
     $titulo = "Bienvenido";
-    $_SESSION['estado_visita'] = "regreso";
 } else {
     $titulo = "Bienvenido otra vez";
 }
@@ -261,7 +257,6 @@ if ($_SESSION['estado_visita'] === "primera") {
 <span class="text-white fw-bold">
 👋 <?php echo $titulo; ?>, <?php echo htmlspecialchars($nombre); ?>
 </span>
-
 <a href="logout.php" class="btn btn-light">
 Salir
 </a>
