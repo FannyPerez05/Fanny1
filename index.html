@@ -1,25 +1,28 @@
 <!doctype html>
 <html lang="es">
+
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Biblioteca | Iniciar Sesión</title>
+
+<title>Biblioteca Digital</title>
 
 <link href="./wwwroot/css/bootstrap.min.css" rel="stylesheet">
 <link href="./wwwroot/css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="./wwwroot/css/bootstrap-icons.min.css">
 
-<script src="./wwwroot/js/jquery-4.0.0.min.js"></script>
-<script src="./wwwroot/js/script.js"></script>
-
 <style>
+
 body{
-    margin:0;
-    min-height:100vh;
+    background: linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
+    background-size: 300% 300%;
+    animation: fondo 8s ease infinite;
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
-    background-size:300% 300%;
-    animation:fondo 8s ease infinite;
 }
 
 @keyframes fondo{
@@ -29,25 +32,26 @@ body{
 }
 
 .login-box{
-    background:rgba(255,255,255,.96);
-    border-radius:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,.20);
-    position:relative;
+    background:white;
+    width:100%;
+    max-width:450px;
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 20px 40px rgba(0,0,0,.2);
 }
 
 .logo{
     width:90px;
     height:90px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#0d6efd,#d63384);
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
     color:white;
+    border-radius:50%;
     display:flex;
-    align-items:center;
     justify-content:center;
-    font-size:38px;
+    align-items:center;
+    font-size:40px;
     margin:auto;
-    margin-top:-75px;
-    box-shadow:0 10px 25px rgba(0,0,0,.20);
+    margin-bottom:20px;
 }
 
 .form-control{
@@ -55,94 +59,105 @@ body{
     padding:12px;
 }
 
-.form-control:focus{
-    border-color:#6610f2;
-    box-shadow:0 0 0 .2rem rgba(102,16,242,.15);
-}
-
 .btn-login{
     background:linear-gradient(135deg,#0d6efd,#6610f2);
-    color:white;
     border:none;
     border-radius:12px;
-    padding:10px 18px;
-    font-weight:600;
+    padding:12px;
+    color:white;
+    font-weight:bold;
+    transition:.3s;
 }
 
 .btn-login:hover{
+    transform:scale(1.03);
     color:white;
-    transform:translateY(-2px);
 }
 
-.link{
+a{
     text-decoration:none;
-    color:#6610f2;
-    font-weight:600;
 }
 
-.link:hover{
-    color:#d63384;
-}
 </style>
 
 </head>
 
 <body>
 
-<main id="main">
-<div class="container-lg d-flex flex-column">
-<div class="row align-items-center justify-content-center no-gutters min-vh-100">
+<div class="login-box">
 
-<div class="col-md-7 col-lg-5">
-
-<div class="shadow mt-5 p-5 bg-white rounded-3 border login-box">
+<div class="text-center">
 
 <div class="logo">
 <i class="bi bi-book-half"></i>
 </div>
 
-<div class="w-100 text-center mt-3">
-<h1 class="display-6 fw-bold">Bienvenid@</h1>
-<p class="text-muted">Use sus credenciales para iniciar sesión</p>
+<h2 class="fw-bold">
+Biblioteca Digital
+</h2>
+
+<p class="text-muted">
+Inicia sesión para continuar
+</p>
+
 </div>
 
-<div class="col-12">
+<form action="login.php" method="POST">
 
 <div class="mb-3">
-<label for="email" class="form-label fw-semibold">
-<i class="bi bi-envelope-fill"></i> Email
+
+<label class="form-label">
+Correo electrónico
 </label>
-<input class="form-control" id="email" placeholder="usuario@correo.com">
+
+<input
+type="email"
+class="form-control"
+name="email"
+required>
+
 </div>
 
-<div class="mb-3">
-<label for="pwd" class="form-label fw-semibold">
-<i class="bi bi-lock-fill"></i> Contraseña
+<div class="mb-4">
+
+<label class="form-label">
+Contraseña
 </label>
-<input class="form-control" type="password" id="pwd" placeholder="********">
+
+<input
+type="password"
+class="form-control"
+name="pwd"
+required>
+
 </div>
 
-<div class="d-flex justify-content-between align-items-center py-3">
+<div class="d-grid">
 
-<div>
-<span class="small text-muted">¿No tienes cuenta?</span>
-<a class="small link" href="registro.html"> Crear cuenta</a>
-</div>
+<button class="btn btn-login">
 
-<button class="btn btn-login" onclick="login();">
 <i class="bi bi-box-arrow-in-right"></i>
 Iniciar sesión
+
 </button>
 
 </div>
 
-</div>
-</div>
+<div class="text-center mt-4">
+
+<span class="text-muted">
+¿No tienes cuenta?
+</span>
+
+<a href="registro.html">
+Crear cuenta
+</a>
 
 </div>
+
+</form>
+
 </div>
-</div>
-</main>
 
 </body>
 </html>

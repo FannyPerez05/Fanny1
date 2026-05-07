@@ -1,69 +1,55 @@
 <?php
+
 session_start();
 
-// index.php
-require_once 'db.php'; // Traemos el código del otro archivo
+require_once 'db.php';
 
+$email = $_POST['email'];
+$pwd = $_POST['pwd'];
 
+$db = conectarDB();
 
-//  Obtenemos los datos del formulario
-     $email  = $_POST['email'];
-     $pwd = $_POST['pwd'];
-     
-     // Llamamos a la función y guardamos el objeto en $db
-     $db = conectarDB();
-      
+try {
 
-  try {
-  
+    $sql = "SELECT id, nombre, password, email
+            FROM usuarios
+            WHERE email = :email";
 
+    $query = $db->prepare($sql);
 
-        $sql = "select id,nombre,password,email from usuarios where email= :email";
-        $query = $db->prepare($sql);
+    $query->execute([
+        'email' => $email
+    ]);
 
-	
+    $usuario = $query->fetch(PDO::FETCH_ASSOC);
 
-        // Ejecutamos pasando los datos en un array
-        $resultado = $query->execute([
-            'email'  => $email
-        ]);
-        $usuario = $query->fetch(PDO::FETCH_ASSOC);
-        if($usuario){
+    if($usuario){
+
         $verify = password_verify($pwd, $usuario['password']);
+
         if($verify){
-            session_start();
-            $_SESSION['username'] = $usuario['email']; // Store session data
+
             $_SESSION['id'] = $usuario['id'];
-            $_SESSION['nombre'] = $usuario['nombre']; 
+            $_SESSION['nombre'] = $usuario['nombre'];
 
             header("Location: dashboard.php");
-            
+            exit();
+
         }else{
-            echo "La contraseña esta mal...";
-        }
-        
-        
-        }else{
-            echo "No se encontraron datos!";
+
+            echo "Contraseña incorrecta";
+
         }
 
-        
+    }else{
 
-        
+        echo "Usuario no encontrado";
 
-        
-
-    } catch (PDOException $e) {
-        // Manejo de errores (ej. si el email ya existe y es único)
-        echo "Database Error: " . $e->getMessage();
-
-        
-     
     }
 
+}catch(PDOException $e){
 
+    echo $e->getMessage();
 
-
-
-
+}
 ?>
