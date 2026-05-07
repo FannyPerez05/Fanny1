@@ -32,8 +32,7 @@ try {
             $_SESSION['id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
 
-            // cookie opcional SOLO para mostrar nombre
-            setcookie("usuario", $nombre, time() + (86400 * 7), "/");
+
 
             header("Location: dashboard.php");
             exit();

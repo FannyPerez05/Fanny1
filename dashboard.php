@@ -242,13 +242,13 @@ Hola
 
 <?php
 $nombre = $_SESSION['nombre'] ?? "Invitado";
-$titulo = "Bienvenido";
 
-// detectar primera vez usando SESSION, no cookie
-if (!isset($_SESSION['ya_entro'])) {
+// detectar primera vez REAL de la sesión
+if (!isset($_SESSION['visitas'])) {
+    $_SESSION['visitas'] = 1;
     $titulo = "Bienvenido";
-    $_SESSION['ya_entro'] = true;
 } else {
+    $_SESSION['visitas']++;
     $titulo = "Bienvenido otra vez";
 }
 ?>
