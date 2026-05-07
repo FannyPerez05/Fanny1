@@ -29,29 +29,27 @@ try {
 
         if($verify){
 
+            // 🔥 IMPORTANTE: limpiar sesión anterior por seguridad
+            session_regenerate_id(true);
+
             $_SESSION['id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
 
-
+            // 🔥 reset del estado de bienvenida (CLAVE)
+            $_SESSION['primer_ingreso'] = true;
 
             header("Location: dashboard.php");
             exit();
 
         }else{
-
             echo "Contraseña incorrecta";
-
         }
 
     }else{
-
         echo "Usuario no encontrado";
-
     }
 
 }catch(PDOException $e){
-
     echo $e->getMessage();
-
 }
 ?>

@@ -245,10 +245,9 @@ session_start();
 
 $nombre = $_SESSION['nombre'] ?? "Invitado";
 
-// detectar primera vez REAL del usuario (por sesión)
-if (!isset($_SESSION['primer_ingreso'])) {
-    $_SESSION['primer_ingreso'] = true;
+if (!isset($_SESSION['primer_ingreso']) || $_SESSION['primer_ingreso'] === true) {
     $titulo = "Bienvenido";
+    $_SESSION['primer_ingreso'] = false;
 } else {
     $titulo = "Bienvenido otra vez";
 }
