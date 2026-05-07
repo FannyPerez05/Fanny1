@@ -17,7 +17,7 @@ require_once 'db.php'; // Traemos el código del otro archivo
   
 
 
-        $sql = "select id,password,email from usuarios where email= :email";
+        $sql = "select id,nombre,password,email from usuarios where email= :email";
         $query = $db->prepare($sql);
 
 	
@@ -33,6 +33,8 @@ require_once 'db.php'; // Traemos el código del otro archivo
             session_start();
             $_SESSION['username'] = $usuario['email']; // Store session data
             $_SESSION['id'] = $usuario['id'];
+            $_SESSION['nombre'] = $usuario['nombre']; 
+
             header("Location: dashboard.php");
             
         }else{
