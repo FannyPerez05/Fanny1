@@ -104,6 +104,36 @@ if(isset($_POST['guardar_prestamo'])){
         ':id' => $libro_id
     ]);
 }
+
+/* =========================
+   DEVOLVER LIBRO
+========================= */
+
+if(isset($_GET['devolver'])){
+
+    $libro_id = $_GET['devolver'];
+
+    // Volver disponible
+    $sql = "UPDATE libros
+            SET disponible = 1
+            WHERE id = :id";
+
+    $stmt = $con->prepare($sql);
+
+    $stmt->execute([
+        ':id' => $libro_id
+    ]);
+
+    // Eliminar préstamo
+    $sql2 = "DELETE FROM prestamos
+             WHERE libro_id = :id";
+
+    $stmt2 = $con->prepare($sql2);
+
+    $stmt2->execute([
+        ':id' => $libro_id
+    ]);
+}
 ?>
 
 <!doctype html>
@@ -482,6 +512,7 @@ Historial de Préstamos
 <th>Libro</th>
 <th>Usuario</th>
 <th>Fecha</th>
+<th>Acción</th>
 </tr>
 
 </thead>
@@ -508,6 +539,18 @@ foreach($prestamos as $p){
 <td><?php echo $p['nombre']; ?></td>
 
 <td><?php echo $p['fecha_prestamo']; ?></td>
+
+<td>
+
+<a
+href="?devolver=<?php echo $p['libro_id']; ?>"
+class="btn btn-success btn-sm">
+
+Devolver
+
+</a>
+
+</td>
 
 </tr>
 
