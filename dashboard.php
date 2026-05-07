@@ -241,16 +241,22 @@ Biblioteca Digital
 Hola
 
 <?php
-$esPrimeraVez = false;
+$nombreMostrar = $primerNombre;
+$titulo = "Bienvenido";
 
-// si existe cookie de usuario
+// si hay cookie del usuario actual
 if (isset($_COOKIE['usuario']) && !empty($_COOKIE['usuario'])) {
+
     $nombreMostrar = $_COOKIE['usuario'];
-    $titulo = "Bienvenido otra vez";
-} else {
-    $nombreMostrar = $primerNombre; // fallback de sesión
-    $titulo = "Bienvenido";
-    $esPrimeraVez = true;
+
+    // cookie específica de visita para ESTE usuario
+    $cookieVisita = "visitado_" . $nombreMostrar;
+
+    if (isset($_COOKIE[$cookieVisita])) {
+        $titulo = "Bienvenido otra vez";
+    } else {
+        $titulo = "Bienvenido";
+    }
 }
 ?>
 
