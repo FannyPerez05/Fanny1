@@ -112,27 +112,47 @@ if(isset($_POST['guardar_prestamo'])){
 if(isset($_GET['devolver'])){
 
     $libro_id = $_GET['devolver'];
+    $usuario_id = $_SESSION['id'];
 
-    // Volver disponible
-    $sql = "UPDATE libros
-            SET disponible = 1
-            WHERE id = :id";
+    // Verificar que el préstamo pertenezca al usuario
+    $verificar = "SELECT * FROM prestamos
+                  WHERE libro_id = :libro
+                  AND usuario_id = :usuario";
 
-    $stmt = $con->prepare($sql);
+    $stmtVerificar = $con->prepare($verificar);
 
-    $stmt->execute([
-        ':id' => $libro_id
+    $stmtVerificar->execute([
+        ':libro' => $libro_id,
+        ':usuario' => $usuario_id
     ]);
 
-    // Eliminar préstamo
-    $sql2 = "DELETE FROM prestamos
-             WHERE libro_id = :id";
+    $prestamo = $stmtVerificar->fetch();
 
-    $stmt2 = $con->prepare($sql2);
+    if($prestamo){
 
-    $stmt2->execute([
-        ':id' => $libro_id
-    ]);
+        // Volver disponible
+        $sql = "UPDATE libros
+                SET disponible = 1
+                WHERE id = :id";
+
+        $stmt = $con->prepare($sql);
+
+        $stmt->execute([
+            ':id' => $libro_id
+        ]);
+
+        // Eliminar préstamo
+        $sql2 = "DELETE FROM prestamos
+                 WHERE libro_id = :id
+                 AND usuario_id = :usuario";
+
+        $stmt2 = $con->prepare($sql2);
+
+        $stmt2->execute([
+            ':id' => $libro_id,
+            ':usuario' => $usuario_id
+        ]);
+    }
 }
 ?>
 
@@ -542,6 +562,8 @@ foreach($prestamos as $p){
 
 <td>
 
+<?php if($p['usuario_id'] == $_SESSION['id']){ ?>
+
 <a
 href="?devolver=<?php echo $p['libro_id']; ?>"
 class="btn btn-success btn-sm">
@@ -549,6 +571,14 @@ class="btn btn-success btn-sm">
 Devolver
 
 </a>
+
+<?php } else { ?>
+
+<span class="badge bg-secondary">
+No disponible
+</span>
+
+<?php } ?>
 
 </td>
 
