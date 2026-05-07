@@ -238,7 +238,23 @@ Biblioteca Digital
 <div class="d-flex align-items-center gap-3">
 
 <span class="text-white fw-bold">
-Hola <?php echo $primerNombre; ?> 👋
+Hola
+
+<?php
+
+if(isset($_COOKIE['usuario'])){
+
+    echo $_COOKIE['usuario'];
+
+}else{
+
+    echo $primerNombre;
+
+}
+
+?>
+
+👋
 </span>
 
 <a href="logout.php" class="btn btn-light">

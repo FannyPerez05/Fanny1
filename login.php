@@ -32,6 +32,13 @@ try {
             $_SESSION['id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
 
+            setcookie(
+                "usuario",
+                $usuario['nombre'],
+                time() + (86400 * 30),
+                "/"
+            );
+
             header("Location: dashboard.php");
             exit();
 

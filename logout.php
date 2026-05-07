@@ -1,7 +1,11 @@
 <?php
+
 session_start();
-session_unset();    // Elimina las variables
-session_destroy();  // Destruye la sesión
+
+session_destroy();
+
+setcookie("usuario", "", time() - 3600, "/");
+
 header("Location: index.html");
-exit();
+
 ?>
