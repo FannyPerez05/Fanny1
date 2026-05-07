@@ -1,32 +1,57 @@
-if ($verify) {
+<?php
 
-    session_regenerate_id(true);
+session_start();
 
-    $_SESSION['id'] = $usuario['id'];
-    $_SESSION['nombre'] = $usuario['nombre'];
+require_once 'db.php';
 
-    // 🔥 NO dependas de sesión vieja
-    if ($usuario['primer_login'] == 1) {
+$email = $_POST['email'];
+$pwd = $_POST['pwd'];
 
-        $titulo = "Bienvenido";
+$db = conectarDB();
 
-        $update = $db->prepare("
-            UPDATE usuarios
-            SET primer_login = 0
-            WHERE id = :id
-        ");
+try {
 
-        $update->execute([
-            ':id' => $usuario['id']
-        ]);
+    $sql = "SELECT id, nombre, password, email
+            FROM usuarios
+            WHERE email = :email";
 
-    } else {
-        $titulo = "Bienvenido otra vez";
+    $query = $db->prepare($sql);
+
+    $query->execute([
+        'email' => $email
+    ]);
+
+    $usuario = $query->fetch(PDO::FETCH_ASSOC);
+
+    if($usuario){
+
+        $verify = password_verify($pwd, $usuario['password']);
+
+        if($verify){
+
+            $_SESSION['id'] = $usuario['id'];
+            $_SESSION['nombre'] = $usuario['nombre'];
+
+
+
+            header("Location: dashboard.php");
+            exit();
+
+        }else{
+
+            echo "Contraseña incorrecta";
+
+        }
+
+    }else{
+
+        echo "Usuario no encontrado";
+
     }
 
-    // 🔥 IMPORTANTE: guardar SOLO para esta sesión
-    $_SESSION['titulo'] = $titulo;
+}catch(PDOException $e){
 
-    header("Location: dashboard.php");
-    exit();
+    echo $e->getMessage();
+
 }
+?>
