@@ -10,6 +10,23 @@ include("db.php");
 $con = conectarDB();
 
 /* =========================
+   GUARDAR AUTOR
+========================= */
+if(isset($_POST['guardar_autor'])){
+
+    $nombre_autor = $_POST['nombre_autor'];
+
+    $sql = "INSERT INTO autores(nombre)
+            VALUES(:nombre)";
+
+    $stmt = $con->prepare($sql);
+
+    $stmt->execute([
+        ':nombre' => $nombre_autor
+    ]);
+}
+
+/* =========================
    GUARDAR LIBRO
 ========================= */
 if (isset($_POST['guardar_libro'])) {
@@ -79,11 +96,11 @@ if (isset($_POST['guardar_prestamo'])) {
 <style>
 
 body{
-    background:linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
-    background-size:300% 300%;
-    animation:fondo 8s ease infinite;
-    min-height:100vh;
-    font-family:'Segoe UI',sans-serif;
+    background: linear-gradient(135deg,#0d6efd,#6610f2,#d63384);
+    background-size: 300% 300%;
+    animation: fondo 8s ease infinite;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 @keyframes fondo{
@@ -115,9 +132,25 @@ body{
     transform:translateY(-2px);
 }
 
+.sidebar{
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(10px);
+    border-radius:20px;
+    padding:20px;
+}
+
+.sidebar .btn{
+    border-radius:12px;
+}
+
 .navbar-custom{
-    background:rgba(0,0,0,.2);
-    backdrop-filter:blur(10px);
+    background: rgba(0,0,0,.2);
+    backdrop-filter: blur(10px);
+}
+
+.table{
+    border-radius:15px;
+    overflow:hidden;
 }
 
 </style>
@@ -127,31 +160,107 @@ body{
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-custom px-4">
+<nav class="navbar navbar-custom px-4 py-3">
 
-<h4 class="text-white">
-<i class="bi bi-book-fill"></i>
+<h3 class="text-white m-0">
+<i class="bi bi-book-half"></i>
 Biblioteca Digital
-</h4>
+</h3>
 
 <a href="logout.php" class="btn btn-light">
+<i class="bi bi-box-arrow-right"></i>
 Salir
 </a>
 
 </nav>
 
-<div class="container py-5">
+<div class="container-fluid py-4">
+
+<div class="row">
+
+<!-- SIDEBAR -->
+<div class="col-md-3 mb-4">
+
+<div class="sidebar text-center">
+
+<h4 class="text-white mb-4">
+Panel
+</h4>
+
+<div class="d-grid gap-3">
+
+<button class="btn btn-primary">
+<i class="bi bi-book"></i>
+Libros
+</button>
+
+<button class="btn btn-success">
+<i class="bi bi-person"></i>
+Autores
+</button>
+
+<button class="btn btn-warning text-white">
+<i class="bi bi-arrow-left-right"></i>
+Préstamos
+</button>
+
+</div>
+
+<hr class="text-white">
+
+<p class="text-white small">
+Bienvenid@ a tu biblioteca digital
+</p>
+
+</div>
+
+</div>
+
+<!-- CONTENIDO -->
+<div class="col-md-9">
+
+<div class="row">
+
+<!-- AGREGAR AUTOR -->
+<div class="col-md-6 mb-4">
+
+<div class="card-box h-100">
+
+<h4 class="mb-3">
+Agregar Autor
+</h4>
+
+<form method="POST">
+
+<input
+type="text"
+name="nombre_autor"
+class="form-control mb-3"
+placeholder="Nombre del autor"
+required>
+
+<button
+name="guardar_autor"
+class="btn btn-success w-100">
+
+Guardar Autor
+
+</button>
+
+</form>
+
+</div>
+
+</div>
 
 <!-- AGREGAR LIBRO -->
-<div class="row justify-content-center mb-5">
+<div class="col-md-6 mb-4">
 
-<div class="col-md-6">
+<div class="card-box h-100">
 
-<div class="card-box">
-
-<h3 class="mb-3 text-center">
+<h4 class="mb-3">
 Agregar Libro
-</h3>
+</h4>
 
 <form method="POST">
 
@@ -202,13 +311,13 @@ Guardar Libro
 </div>
 
 <!-- TABLA LIBROS -->
-<div class="card-box mb-5">
+<div class="card-box mb-4">
 
-<h3 class="mb-3">
+<h4 class="mb-3">
 Libros Registrados
-</h3>
+</h4>
 
-<table class="table table-striped">
+<table class="table table-hover">
 
 <thead class="table-primary">
 
@@ -266,22 +375,20 @@ Eliminar
 
 </div>
 
-<!-- PRÉSTAMOS -->
-<div class="row justify-content-center mb-5">
-
-<div class="col-md-6">
-
+<!-- PRESTAMOS -->
 <div class="card-box">
 
-<h3 class="mb-3 text-center">
+<h4 class="mb-3">
 Registrar Préstamo
-</h3>
+</h4>
 
-<form method="POST">
+<form method="POST" class="row g-3">
+
+<div class="col-md-8">
 
 <select
 name="libro_id"
-class="form-control mb-3"
+class="form-control"
 required>
 
 <option value="">
@@ -302,35 +409,33 @@ echo "<option value='".$libro['id']."'>".$libro['titulo']."</option>";
 
 </select>
 
+</div>
+
+<div class="col-md-4">
+
 <button
 name="guardar_prestamo"
-class="btn btn-success w-100">
+class="btn btn-warning text-white w-100">
 
 Prestar Libro
 
 </button>
 
+</div>
+
 </form>
 
-</div>
+<hr>
 
-</div>
-
-</div>
-
-<!-- TABLA PRÉSTAMOS -->
-<div class="card-box">
-
-<h3 class="mb-3">
-Préstamos
-</h3>
+<h5 class="mb-3">
+Historial de Préstamos
+</h5>
 
 <table class="table table-striped">
 
 <thead class="table-success">
 
 <tr>
-<th>ID</th>
 <th>Libro</th>
 <th>Usuario</th>
 <th>Fecha</th>
@@ -355,8 +460,6 @@ foreach($prestamos as $p){
 
 <tr>
 
-<td><?php echo $p['id']; ?></td>
-
 <td><?php echo $p['titulo']; ?></td>
 
 <td><?php echo $p['nombre']; ?></td>
@@ -370,6 +473,10 @@ foreach($prestamos as $p){
 </tbody>
 
 </table>
+
+</div>
+
+</div>
 
 </div>
 
