@@ -1,13 +1,23 @@
 <?php
 session_start();
 
+include("db.php");
+
+$con = conectarDB();
+
+/* =========================
+   VALIDAR SESIÓN
+========================= */
 if (!isset($_SESSION['id'])) {
     header("Location: index.html");
     exit();
 }
 
-include("db.php");
-$con = conectarDB();
+/* =========================
+   NOMBRE USUARIO
+========================= */
+$nombreCompleto = $_SESSION['nombre'];
+$primerNombre = explode(" ", $nombreCompleto)[0];
 
 /* =========================
    GUARDAR AUTOR
@@ -83,6 +93,7 @@ if (isset($_POST['guardar_prestamo'])) {
 
 <!doctype html>
 <html lang="es">
+
 <head>
 
 <meta charset="utf-8">
@@ -100,7 +111,7 @@ body{
     background-size: 300% 300%;
     animation: fondo 8s ease infinite;
     min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
+    font-family:'Segoe UI',sans-serif;
 }
 
 @keyframes fondo{
@@ -129,12 +140,11 @@ body{
 
 .btn-custom:hover{
     color:white;
-    transform:translateY(-2px);
 }
 
 .sidebar{
-    background: rgba(255,255,255,.15);
-    backdrop-filter: blur(10px);
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
     border-radius:20px;
     padding:20px;
 }
@@ -144,8 +154,8 @@ body{
 }
 
 .navbar-custom{
-    background: rgba(0,0,0,.2);
-    backdrop-filter: blur(10px);
+    background:rgba(0,0,0,.2);
+    backdrop-filter:blur(10px);
 }
 
 .table{
@@ -167,10 +177,18 @@ body{
 Biblioteca Digital
 </h3>
 
+<div class="d-flex align-items-center gap-3">
+
+<span class="text-white fw-bold">
+Hola <?php echo $primerNombre; ?> 👋
+</span>
+
 <a href="logout.php" class="btn btn-light">
 <i class="bi bi-box-arrow-right"></i>
 Salir
 </a>
+
+</div>
 
 </nav>
 
@@ -189,19 +207,25 @@ Panel
 
 <div class="d-grid gap-3">
 
-<button class="btn btn-primary">
-<i class="bi bi-book"></i>
-Libros
+<button class="btn btn-primary"
+onclick="mostrarSeccion('libros')">
+
+📚 Libros
+
 </button>
 
-<button class="btn btn-success">
-<i class="bi bi-person"></i>
-Autores
+<button class="btn btn-success"
+onclick="mostrarSeccion('autores')">
+
+✍ Autores
+
 </button>
 
-<button class="btn btn-warning text-white">
-<i class="bi bi-arrow-left-right"></i>
-Préstamos
+<button class="btn btn-warning text-white"
+onclick="mostrarSeccion('prestamos')">
+
+🔄 Préstamos
+
 </button>
 
 </div>
@@ -219,12 +243,8 @@ Bienvenid@ a tu biblioteca digital
 <!-- CONTENIDO -->
 <div class="col-md-9">
 
-<div class="row">
-
-<!-- AGREGAR AUTOR -->
-<div class="col-md-6 mb-4">
-
-<div class="card-box h-100">
+<!-- AUTORES -->
+<div id="autores" class="card-box mb-4">
 
 <h4 class="mb-3">
 Agregar Autor
@@ -251,12 +271,8 @@ Guardar Autor
 
 </div>
 
-</div>
-
-<!-- AGREGAR LIBRO -->
-<div class="col-md-6 mb-4">
-
-<div class="card-box h-100">
+<!-- LIBROS -->
+<div id="libros" class="card-box mb-4">
 
 <h4 class="mb-3">
 Agregar Libro
@@ -304,14 +320,7 @@ Guardar Libro
 
 </form>
 
-</div>
-
-</div>
-
-</div>
-
-<!-- TABLA LIBROS -->
-<div class="card-box mb-4">
+<hr>
 
 <h4 class="mb-3">
 Libros Registrados
@@ -376,7 +385,7 @@ Eliminar
 </div>
 
 <!-- PRESTAMOS -->
-<div class="card-box">
+<div id="prestamos" class="card-box">
 
 <h4 class="mb-3">
 Registrar Préstamo
@@ -481,6 +490,22 @@ foreach($prestamos as $p){
 </div>
 
 </div>
+
+<script>
+
+function mostrarSeccion(id){
+
+document.getElementById('libros').style.display='none';
+document.getElementById('autores').style.display='none';
+document.getElementById('prestamos').style.display='none';
+
+document.getElementById(id).style.display='block';
+
+}
+
+mostrarSeccion('libros');
+
+</script>
 
 </body>
 </html>
