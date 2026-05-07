@@ -32,10 +32,8 @@ try {
             $_SESSION['id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
 
-            setcookie("usuario", $nombre, time() + (86400 * 7));
-
-// nueva cookie para detectar primera visita
-setcookie("visitado_" . $nombre, "1", time() + (86400 * 7));
+            // cookie opcional SOLO para mostrar nombre
+            setcookie("usuario", $nombre, time() + (86400 * 7), "/");
 
             header("Location: dashboard.php");
             exit();

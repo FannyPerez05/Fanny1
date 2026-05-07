@@ -241,12 +241,14 @@ Biblioteca Digital
 Hola
 
 <?php
-$nombre = "Invitado";
+$nombre = $_SESSION['nombre'] ?? "Invitado";
 $titulo = "Bienvenido";
 
-// primero cookie
-if (isset($_COOKIE['usuario']) && !empty($_COOKIE['usuario'])) {
-    $nombre = $_COOKIE['usuario'];
+// detectar primera vez usando SESSION, no cookie
+if (!isset($_SESSION['ya_entro'])) {
+    $titulo = "Bienvenido";
+    $_SESSION['ya_entro'] = true;
+} else {
     $titulo = "Bienvenido otra vez";
 }
 ?>
