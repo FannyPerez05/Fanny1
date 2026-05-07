@@ -241,14 +241,19 @@ Biblioteca Digital
 Hola
 
 <?php
+session_start();
+
 $nombre = $_SESSION['nombre'] ?? "Invitado";
 
-// detectar primera vez REAL de la sesión
-if (!isset($_SESSION['visitas'])) {
-    $_SESSION['visitas'] = 1;
+// inicializar estado de visita
+if (!isset($_SESSION['estado_visita'])) {
+    $_SESSION['estado_visita'] = "primera";
+}
+
+if ($_SESSION['estado_visita'] === "primera") {
     $titulo = "Bienvenido";
+    $_SESSION['estado_visita'] = "regreso";
 } else {
-    $_SESSION['visitas']++;
     $titulo = "Bienvenido otra vez";
 }
 ?>
