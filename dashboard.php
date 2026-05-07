@@ -241,27 +241,18 @@ Biblioteca Digital
 Hola
 
 <?php
-$nombreMostrar = $primerNombre;
+$nombre = "Invitado";
 $titulo = "Bienvenido";
 
-// si hay cookie del usuario actual
+// primero cookie
 if (isset($_COOKIE['usuario']) && !empty($_COOKIE['usuario'])) {
-
-    $nombreMostrar = $_COOKIE['usuario'];
-
-    // cookie específica de visita para ESTE usuario
-    $cookieVisita = "visitado_" . $nombreMostrar;
-
-    if (isset($_COOKIE[$cookieVisita])) {
-        $titulo = "Bienvenido otra vez";
-    } else {
-        $titulo = "Bienvenido";
-    }
+    $nombre = $_COOKIE['usuario'];
+    $titulo = "Bienvenido otra vez";
 }
 ?>
 
 <span class="text-white fw-bold">
-👋 <?php echo $titulo; ?>, <?php echo htmlspecialchars($nombreMostrar); ?>
+👋 <?php echo $titulo; ?>, <?php echo htmlspecialchars($nombre); ?>
 </span>
 
 <a href="logout.php" class="btn btn-light">
